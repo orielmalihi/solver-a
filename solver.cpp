@@ -6,6 +6,7 @@
  */
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "solver.hpp"
 using namespace std;
 
@@ -30,10 +31,40 @@ RealVariable &operator-(double num, RealVariable &expr)
 {
     return (num * -1) + expr;
 }
-// ******************* class methods ********************
+// ******************* class methods ********************************************************
 
-double RealVariable::Mysolve(RealVariable expr){
-    return 0;
+double RealVariable::Mysolve()
+{
+    double ans = -1;
+    if (coef_2 != 0)
+    {
+        int a = coef_2;
+        int b = coef_1;
+        int c = coef_0;
+        // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
+        int t = b * b - 4 * a * c;
+        if (t < 0)
+        {
+            reset();
+            // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
+            throw runtime_error("There is no real solution");
+        }
+        ans = sqrt(t) - b;
+        ans /= a * 2;
+        reset();
+        return ans;
+    }
+    else if (coef_1 != 0)
+    {
+        ans = (coef_0 / coef_1) * (-1);
+        reset();
+        return ans;
+    }
+    else
+    {
+        throw runtime_error("ERR: cant do this math. wrong input");
+    }
+    return ans;
 }
 RealVariable &RealVariable::operator^(double pow)
 {
@@ -53,6 +84,7 @@ RealVariable &RealVariable::operator+(double plus)
 {
     coef_0 += plus;
     return *this;
+
 }
 RealVariable &RealVariable::operator+(RealVariable expr)
 {
@@ -67,9 +99,11 @@ RealVariable &RealVariable::operator-(double minus)
 }
 RealVariable &RealVariable::operator-(RealVariable expr)
 {
+    cout << "before "  << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
     coef_0 -= expr.coef_0;
     coef_1 -= expr.coef_1;
     coef_2 -= expr.coef_2;
+    cout << "after " << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
     return *this;
 }
 RealVariable &RealVariable::operator==(double num)
@@ -102,11 +136,12 @@ ComplexVariable &operator-(double num, ComplexVariable &expr)
 {
     return (-1 * num) + expr;
 }
-// ******************* class methods ********************
+// ******************* class methods ****************************************************
 
-    complex<double> ComplexVariable::Mysolve(ComplexVariable expr){
-        return expr.comp;
-    }
+complex<double> ComplexVariable::Mysolve()
+{
+    return comp;
+}
 ComplexVariable &ComplexVariable::operator^(double pow)
 {
     coef_2 = coef_1 * coef_1;
@@ -164,12 +199,20 @@ ComplexVariable &ComplexVariable::operator==(ComplexVariable expr)
     return this->operator-(expr);
 }
 
-double solve(RealVariable expr)
+double solve(RealVariable &expr)
 {
-    return expr.Mysolve(expr);
+    return expr.Mysolve();
 }
-complex<double> solve(ComplexVariable expr)
+complex<double> solve(ComplexVariable &expr)
 {
-    return expr.Mysolve(expr);
+    return expr.Mysolve();
 }
+// **********************************************private methods ************************
+void RealVariable::reset()
+{
+    coef_2 = 0;
+    coef_1 = 1;
+    coef_0 = 0;
+}
+
 } // namespace solver

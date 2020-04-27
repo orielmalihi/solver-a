@@ -21,6 +21,7 @@ private:
     double coef_2;
     double coef_1;
     double coef_0;
+    void reset();
 
 public:
     RealVariable() : coef_2(0),
@@ -38,7 +39,7 @@ public:
     RealVariable &operator-(RealVariable expr);
     RealVariable &operator==(double num);
     RealVariable &operator==(RealVariable expr);
-    double Mysolve(RealVariable expr);
+    double Mysolve();
 };
 
 class ComplexVariable
@@ -50,7 +51,7 @@ private:
 
 public:
     ComplexVariable() : coef_2(0),
-                        coef_1(0) {}
+                        coef_1(1) {}
 
     friend ComplexVariable &operator*(double mul, ComplexVariable &expr);
     friend ComplexVariable &operator+(double num, ComplexVariable &expr);
@@ -65,11 +66,11 @@ public:
     ComplexVariable &operator-(ComplexVariable expr);
     ComplexVariable &operator==(double num);
     ComplexVariable &operator==(ComplexVariable expr);
-    complex<double> Mysolve(ComplexVariable expr);
+    complex<double> Mysolve();
 };
 
-double solve(RealVariable expr);
-complex<double> solve(ComplexVariable expr);
+double solve(RealVariable &expr);
+complex<double> solve(ComplexVariable &expr);
 } // namespace solver
 
 #endif /* SOLVER_HPP_ */
