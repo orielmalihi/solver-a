@@ -27,14 +27,18 @@ public:
                      coef_1(1),
                      coef_0(0) {}
 
-    friend RealVariable &operator*(double mul, RealVariable expr);
-    RealVariable &operator^(double mul);
+    friend RealVariable &operator*(double mul, RealVariable &expr);
+    friend RealVariable &operator+(double num, RealVariable &expr);
+    friend RealVariable &operator-(double num, RealVariable &expr);
+    RealVariable &operator^(double pow);
+    RealVariable &operator/(double div);
     RealVariable &operator+(double plus);
     RealVariable &operator+(RealVariable expr);
     RealVariable &operator-(double minus);
     RealVariable &operator-(RealVariable expr);
     RealVariable &operator==(double num);
     RealVariable &operator==(RealVariable expr);
+    double Mysolve(RealVariable expr);
 };
 
 class ComplexVariable
@@ -42,16 +46,17 @@ class ComplexVariable
 private:
     double coef_2;
     double coef_1;
-    double coef_0;
-    complex<double> comp = 0 + 0i;
+    complex<double> comp = 0. + 0i;
 
 public:
     ComplexVariable() : coef_2(0),
-                        coef_1(0),
-                        coef_0(0) {}
+                        coef_1(0) {}
 
-    friend ComplexVariable &operator*(double mul, ComplexVariable expr);
-    ComplexVariable &operator^(double mul);
+    friend ComplexVariable &operator*(double mul, ComplexVariable &expr);
+    friend ComplexVariable &operator+(double num, ComplexVariable &expr);
+    friend ComplexVariable &operator-(double num, ComplexVariable &expr);
+    ComplexVariable &operator^(double pow);
+    ComplexVariable &operator/(double div);
     ComplexVariable &operator+(double plus);
     ComplexVariable &operator+(ComplexVariable expr);
     ComplexVariable &operator+(complex<double> expr);
@@ -60,10 +65,11 @@ public:
     ComplexVariable &operator-(ComplexVariable expr);
     ComplexVariable &operator==(double num);
     ComplexVariable &operator==(ComplexVariable expr);
+    complex<double> Mysolve(ComplexVariable expr);
 };
 
 double solve(RealVariable expr);
-complex<double> &solve(ComplexVariable expr);
+complex<double> solve(ComplexVariable expr);
 } // namespace solver
 
 #endif /* SOLVER_HPP_ */
