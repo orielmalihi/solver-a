@@ -17,10 +17,10 @@ namespace solver
 
 RealVariable &operator*(double num, RealVariable &x)
 {
-    if (x.ind == 0)
+    if (x.add == NULL)
     {
         RealVariable *temp = new RealVariable(0, num, 0);
-        temp->adr[temp->ind++] = temp;
+        temp->add = temp;
         return *temp;
     }
     else
@@ -34,10 +34,10 @@ RealVariable &operator*(double num, RealVariable &x)
 
 RealVariable &operator^(RealVariable &x, double num)
 {
-    if (x.ind == 0)
+    if (x.add == NULL)
     {
         RealVariable *temp = new RealVariable(1, 0, 0);
-        temp->adr[temp->ind++] = temp;
+        temp->add = temp;
         return *temp;
     }
     else
@@ -50,11 +50,11 @@ RealVariable &operator^(RealVariable &x, double num)
 }
 RealVariable &operator/(RealVariable &x, double num)
 {
-    if (x.ind == 0)
+    if (x.add == NULL)
     {
         double t = 1 / num;
         RealVariable *temp = new RealVariable(0, t, 0);
-        temp->adr[temp->ind++] = temp;
+        temp->add = temp;
         return *temp;
     }
     else
@@ -67,10 +67,10 @@ RealVariable &operator/(RealVariable &x, double num)
 }
 RealVariable &operator+(RealVariable &x, double num)
 {
-    if (x.ind == 0)
+    if (x.add == NULL)
     {
         RealVariable *temp = new RealVariable(0, 1, num);
-        temp->adr[temp->ind++] = temp;
+        temp->add = temp;
         return *temp;
     }
     else
@@ -89,11 +89,11 @@ RealVariable &operator-(RealVariable &x, double num)
 }
 RealVariable &operator+(RealVariable &x, RealVariable &y)
 {
-    if (x.ind == 0)
+    if (x.add == NULL)
     {
         RealVariable *temp = new RealVariable(y.coef_2, y.coef_1 + 1, y.coef_0);
-        temp->adr[temp->ind++] = temp;
-        y.~RealVariable();
+        temp->add = temp;
+        delete y.add;
         return *temp;
     }
     else
@@ -101,7 +101,7 @@ RealVariable &operator+(RealVariable &x, RealVariable &y)
         x.coef_2 += y.coef_2;
         x.coef_1 += y.coef_1;
         x.coef_0 += y.coef_0;
-        y.~RealVariable();
+        delete y.add;
         return x;
     }
 }
@@ -130,16 +130,17 @@ double solve(RealVariable &x){
         if (t < 0)
         {
             // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
+            delete x.add;
             throw runtime_error("There is no real solution");
         }
         ans = sqrt(t) - b;
         ans /= a * 2;
-        x.~RealVariable();
+        delete x.add;
     }
     else if (x.coef_1 != 0)
     {
         ans = (x.coef_0 / x.coef_1) * (-1);
-        x.~RealVariable();
+        delete x.add;
     }
     else
     {

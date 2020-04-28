@@ -26,6 +26,7 @@ int main() {
 	}
     cout << solve((x^2) + 2*x + 4.0 == 20 + 6.0*x/2 - x) << endl;   // 4 or -4
     double xvalue = solve(2*x-4.0 == 10.0);   // xvalue == 7
+    cout << xvalue << endl; 
 
     // ComplexVariable y;
     // std::complex<double> yvalue = solve(2*y-4 == 10);

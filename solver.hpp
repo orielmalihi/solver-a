@@ -20,8 +20,7 @@ namespace solver
 class RealVariable
 {
 public:
-    RealVariable *adr[100] = {0};
-    int ind = 0;
+    RealVariable *add = NULL;
     double coef_2;
     double coef_1;
     double coef_0;
@@ -34,11 +33,7 @@ public:
                                                     coef_0(c0) {}
     ~RealVariable()
     {
-        while (ind > 0)
-        {
-            ind--;
-            delete adr[ind];
-        }
+    //   cout << "delete" << endl;
     }
     friend RealVariable &operator*(double num, RealVariable &x);
     friend RealVariable &operator^(RealVariable &x, double num);
@@ -46,10 +41,10 @@ public:
     friend RealVariable &operator+(RealVariable &x, double num);
     friend RealVariable &operator+(double num, RealVariable &x);
     friend RealVariable &operator-(RealVariable &x, double num);
-    friend RealVariable &operator+(RealVariable &x, RealVariable& y);
-    friend RealVariable &operator-(RealVariable &x, RealVariable& y);
+    friend RealVariable &operator+(RealVariable &x, RealVariable &y);
+    friend RealVariable &operator-(RealVariable &x, RealVariable &y);
     friend RealVariable &operator==(RealVariable &x, RealVariable &y);
-    friend RealVariable &operator==(RealVariable& x, double num);
+    friend RealVariable &operator==(RealVariable &x, double num);
 };
 
 // ************************* complex *************************
@@ -77,4 +72,3 @@ double solve(RealVariable &expr);
 } // namespace solver
 
 #endif /* SOLVER_HPP_ */
-
