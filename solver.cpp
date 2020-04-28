@@ -13,52 +13,133 @@ using namespace std;
 namespace solver
 {
 
-// *************** friends methods ***********************
+//*************** friend real **************************
 
-RealVariable &operator*(double mul, RealVariable &expr)
+RealVariable &operator*(double num, RealVariable &x)
 {
-    expr.coef_2 *= mul;
-    expr.coef_1 *= mul;
-    expr.coef_0 *= mul;
-    return expr;
-}
-RealVariable &operator+(double num, RealVariable &expr)
-{
-    expr.coef_0 += num;
-    return expr;
-}
-RealVariable &operator-(double num, RealVariable &expr)
-{
-    return (num * -1) + expr;
-}
-// ******************* class methods ********************************************************
-
-double RealVariable::Mysolve()
-{
-    double ans = -1;
-    if (coef_2 != 0)
+    if (x.ind == 0)
     {
-        int a = coef_2;
-        int b = coef_1;
-        int c = coef_0;
+        RealVariable *temp = new RealVariable(0, num, 0);
+        temp->adr[temp->ind++] = temp;
+        return *temp;
+    }
+    else
+    {
+        x.coef_2 *= num;
+        x.coef_1 *= num;
+        x.coef_0 *= num;
+        return x;
+    }
+}
+
+RealVariable &operator^(RealVariable &x, double num)
+{
+    if (x.ind == 0)
+    {
+        RealVariable *temp = new RealVariable(1, 0, 0);
+        temp->adr[temp->ind++] = temp;
+        return *temp;
+    }
+    else
+    {
+        x.coef_2 = x.coef_1 * x.coef_1;
+        x.coef_1 = 0;
+        x.coef_0 *= x.coef_0;
+        return x;
+    }
+}
+RealVariable &operator/(RealVariable &x, double num)
+{
+    if (x.ind == 0)
+    {
+        double t = 1 / num;
+        RealVariable *temp = new RealVariable(0, t, 0);
+        temp->adr[temp->ind++] = temp;
+        return *temp;
+    }
+    else
+    {
+        x.coef_2 /= num;
+        x.coef_1 /= num;
+        x.coef_0 /= num;
+        return x;
+    }
+}
+RealVariable &operator+(RealVariable &x, double num)
+{
+    if (x.ind == 0)
+    {
+        RealVariable *temp = new RealVariable(0, 1, num);
+        temp->adr[temp->ind++] = temp;
+        return *temp;
+    }
+    else
+    {
+        x.coef_0 += num;
+        return x;
+    }
+}
+    RealVariable &operator+(double num, RealVariable &x){
+        return x + num;
+    }
+
+RealVariable &operator-(RealVariable &x, double num)
+{
+    return x + (-1) * num;
+}
+RealVariable &operator+(RealVariable &x, RealVariable &y)
+{
+    if (x.ind == 0)
+    {
+        RealVariable *temp = new RealVariable(y.coef_2, y.coef_1 + 1, y.coef_0);
+        temp->adr[temp->ind++] = temp;
+        y.~RealVariable();
+        return *temp;
+    }
+    else
+    {
+        x.coef_2 += y.coef_2;
+        x.coef_1 += y.coef_1;
+        x.coef_0 += y.coef_0;
+        y.~RealVariable();
+        return x;
+    }
+}
+RealVariable &operator-(RealVariable &x, RealVariable &y)
+{
+    return x + ((-1)*y);
+}
+
+RealVariable &operator==(RealVariable &x, RealVariable &y)
+{
+    return x - y;
+}
+RealVariable &operator==(RealVariable& x, double num){
+    return x - num;
+}
+
+double solve(RealVariable &x){
+    double ans = -1;
+    if (x.coef_2 != 0)
+    {
+        int a = x.coef_2;
+        int b = x.coef_1;
+        int c = x.coef_0;
         // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
         int t = b * b - 4 * a * c;
         if (t < 0)
         {
-            reset();
             // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
             throw runtime_error("There is no real solution");
         }
         ans = sqrt(t) - b;
         ans /= a * 2;
-        reset();
-        return ans;
+        x.~RealVariable();
     }
-    else if (coef_1 != 0)
+    else if (x.coef_1 != 0)
     {
-        ans = (coef_0 / coef_1) * (-1);
-        reset();
-        return ans;
+        ans = (x.coef_0 / x.coef_1) * (-1);
+        x.~RealVariable();
     }
     else
     {
@@ -66,153 +147,39 @@ double RealVariable::Mysolve()
     }
     return ans;
 }
-RealVariable &RealVariable::operator^(double pow)
-{
-    coef_2 = coef_1 * coef_1;
-    coef_1 = 0;
-    coef_0 *= coef_0;
-    return *this;
-}
-RealVariable &RealVariable::operator/(double div)
-{
-    coef_2 /= div;
-    coef_1 /= div;
-    coef_0 /= div;
-    return *this;
-}
-RealVariable &RealVariable::operator+(double plus)
-{
-    coef_0 += plus;
-    return *this;
 
-}
-RealVariable &RealVariable::operator+(RealVariable expr)
-{
-    coef_0 += expr.coef_0;
-    coef_1 += expr.coef_1;
-    coef_2 += expr.coef_2;
-    return *this;
-}
-RealVariable &RealVariable::operator-(double minus)
-{
-    return this->operator+(-1 * minus);
-}
-RealVariable &RealVariable::operator-(RealVariable expr)
-{
-    cout << "before "  << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
-    coef_0 -= expr.coef_0;
-    coef_1 -= expr.coef_1;
-    coef_2 -= expr.coef_2;
-    cout << "after " << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
-    return *this;
-}
-RealVariable &RealVariable::operator==(double num)
-{
-    return this->operator-(num);
-}
-RealVariable &RealVariable::operator==(RealVariable expr)
-{
-    return this->operator-(expr);
-}
-//**********************************************************************************
-// ***************************** ComplexVariable ***********************************
-//**********************************************************************************
+// to do!!!!!
 
-// *************** friends methods ***********************
+// ************** friend comp **********************************************
 
-ComplexVariable &operator*(double mul, ComplexVariable &expr)
-{
-    expr.coef_2 *= mul;
-    expr.coef_1 *= mul;
-    expr.comp *= mul;
-    return expr;
-}
-ComplexVariable &operator+(double num, ComplexVariable &expr)
-{
-    expr.comp += num;
-    return expr;
-}
-ComplexVariable &operator-(double num, ComplexVariable &expr)
-{
-    return (-1 * num) + expr;
-}
-// ******************* class methods ****************************************************
+// ComplexVariable &operator*(double num, ComplexVariable& x)
+// {
+//     if(x.ind == 0){
+//        ComplexVariable *temp = new ComplexVariable(0, num, 'c');
+//     temp->adr[temp->ind++] = temp;
+//     return *temp;
+//     }
+//     else{
+//         x.coef_2 *= num;
+//         x.coef_1 *= num;
+//         x.comp *= num;
+//         return x;
+//     }
 
-complex<double> ComplexVariable::Mysolve()
-{
-    return comp;
-}
-ComplexVariable &ComplexVariable::operator^(double pow)
-{
-    coef_2 = coef_1 * coef_1;
-    coef_1 = 0;
-    comp *= comp;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator/(double div)
-{
-    coef_2 /= div;
-    coef_1 /= div;
-    comp /= div;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator+(double plus)
-{
-    comp += plus;
-    ;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator+(complex<double> expr)
-{
-    comp += expr;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator-(complex<double> expr)
-{
-    comp -= expr;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator+(ComplexVariable expr)
-{
-    coef_2 += expr.coef_2;
-    coef_1 += expr.coef_1;
-    comp += expr.comp;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator-(double minus)
-{
-    return this->operator+(-1 * minus);
-}
-ComplexVariable &ComplexVariable::operator-(ComplexVariable expr)
-{
-    coef_2 -= expr.coef_2;
-    coef_1 -= expr.coef_1;
-    comp -= expr.comp;
-    return *this;
-}
-ComplexVariable &ComplexVariable::operator==(double num)
-{
-    return this->operator-(num);
-}
-ComplexVariable &ComplexVariable::operator==(ComplexVariable expr)
-{
-    return this->operator-(expr);
-}
+// }
 
-double solve(RealVariable &expr)
-{
-    return expr.Mysolve();
-}
-complex<double> solve(ComplexVariable &expr)
-{
-    return expr.Mysolve();
-}
-// **********************************************private methods ************************
-void RealVariable::reset()
-{
-    coef_2 = 0;
-    coef_1 = 1;
-    coef_0 = 0;
-}
+// ComplexVariable &operator^(ComplexVariable& x, double num)
+// {
+//     ComplexVariable *temp = new ComplexVariable(1, 0, 'c');
+//     temp->adr[temp->ind++] = temp;
+//     return *temp;
+// }
+// ComplexVariable &operator/(ComplexVariable& x, double num)
+// {
+//     double t = 1 / num;
+//     ComplexVariable *temp = new ComplexVariable(0, t, 'c');
+//     temp->adr[temp->ind++] = temp;
+//     return *temp;
+// }
 
 } // namespace solver
