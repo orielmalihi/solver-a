@@ -132,11 +132,9 @@ double solve(RealVariable &x)
         double a = x.coef_2;
         double b = x.coef_1;
         double c = x.coef_0;
-        // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
         double t = b * b - 4.0 * a * c;
         if (t < 0)
         {
-            // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
             delete x.add;
             throw runtime_error("There is no real solution");
         }
@@ -317,6 +315,10 @@ complex<double> solve(ComplexVariable &x)
         double b = x.coef_1;
         complex<double> c = x.comp;
         ans = (b * b - 4.0 * a * c);
+        if(c.imag() != 0){
+            delete x.add;
+            throw runtime_error("Math error! cant perform sqrt to imaginary variable");
+        }
         ans = sqrt(ans) - b;
         ans /= a * 2;
         delete x.add;

@@ -53,6 +53,7 @@ TEST_CASE("linear equation - complex")
     CHECK(solve(2 * y == 3) == 1.5 + 0i);
     CHECK(solve(y / 2 == 3) == 6. + 0i);
     CHECK(solve(3 * y - 2 * y == 3) == 3. + 0i);
+    CHECK(solve(3 * y  == 2 * y + 3) == 3. + 0i);
     CHECK(solve(y == 3i - 2i) == 0. + 1i);
     CHECK(solve(2 * y == 4i) == 0. + 2i);
     CHECK(solve(y + 4. + 1i == 3) == -1. - 1i);
@@ -78,24 +79,23 @@ TEST_CASE("Quadratic equation - real")
     CHECK((ans == 2 || ans == -2));
     ans = solve((x ^ 2) == 9);
     CHECK((ans == 3 || ans == -3));
-    ans = solve((x ^ 2) -7 == 9);
+    ans = solve((x ^ 2) - 7 == 9);
     CHECK((ans == 4 || ans == -4));
-    ans = solve((x ^ 2)/2 == 8);
+    ans = solve((x ^ 2) / 2 == 8);
     CHECK((ans == 4 || ans == -4));
-    ans = solve(2*(x ^ 2) == 18);
+    ans = solve(2 * (x ^ 2) == 18);
     CHECK((ans == 3 || ans == -3));
-    ans = solve((x ^ 2) + 5*x == -6);
+    ans = solve((x ^ 2) + 5 * x == -6);
     CHECK((ans == -2 || ans == -3));
     ans = solve(-6 + x + (x ^ 2) == 0);
     CHECK((ans == 2 || ans == -3));
-    ans = solve((x ^ 2) + 2*x == 8);
+    ans = solve((x ^ 2) + 2 * x == 8);
     CHECK((ans == 2 || ans == -4));
-    ans = solve(16 == 2*(x ^ 2) + 4*x);
+    ans = solve(16 == 2 * (x ^ 2) + 4 * x);
     CHECK((ans == 2 || ans == -4));
-    ans = solve(2*(x ^ 2) + 4*x -16  == 0);
+    ans = solve(2 * (x ^ 2) + 4 * x - 16 == 0);
     CHECK((ans == 2 || ans == -4));
-    //************ works **************
-    ans = solve((x ^ 2)  == 5*x +6);
+    ans = solve((x ^ 2) == 5 * x + 6);
     CHECK((ans == -1 || ans == 6));
     ans = solve((x ^ 2) == 100);
     CHECK((ans == 10 || ans == -10));
@@ -103,21 +103,56 @@ TEST_CASE("Quadratic equation - real")
     CHECK((ans == 5 || ans == -5));
     ans = solve((x ^ 2) == 36);
     CHECK((ans == 6 || ans == -6));
-    //********************
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -9), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -6), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -25), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -100), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2) +100 == -9), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2) +25 == -9), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2) +6*x -8 == -100), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2)/2 +x -5== -9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) + 100 == -9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) + 25 == -9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) + 6 * x - 8 == -100), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) / 2 + x - 5 == -9), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -16), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -1000), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -0.01), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2) == 3*x -9), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve(4 ==(x ^ 2) -7*x +100), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve(4*(x ^ 2) +4*x/2 == -9), "There is no real solution");
-    CHECK_THROWS_MESSAGE(solve((x ^ 2)/2 +3*x == -9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) == 3 * x - 9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve(4 == (x ^ 2) - 7 * x + 100), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve(4 * (x ^ 2) + 4 * x / 2 == -9), "There is no real solution");
+    CHECK_THROWS_MESSAGE(solve((x ^ 2) / 2 + 3 * x == -9), "There is no real solution");
     CHECK_THROWS_MESSAGE(solve((x ^ 2) == -81), "There is no real solution");
+}
+
+TEST_CASE("Quadratic equation - complex")
+{
+    complex<double> ans = solve((y ^ 2) == -4);
+    CHECK((ans == 0.-2i || ans == 0.+2i));
+    ans = solve((y ^ 2) == -4);
+    CHECK((ans == 0.-2i || ans == 0.+2i));
+    ans = solve((y ^ 2) == -9);
+    CHECK((ans == 0.-3i || ans == 0.+3i));
+    ans = solve((y ^ 2) +2*y == -2);
+    CHECK((ans == -1.+1i || ans == -1.-1i));
+    ans = solve((y ^ 2)  == 0);
+    CHECK((ans == 0.-0i || ans == 0.+0i));
+    //**********
+    ans = solve( -4 + y == 4*(y ^ 2)/2 -4*y + y);
+    CHECK((ans == 1.-1i || ans == 1.+1i));
+    ans = solve((y ^ 2) == -1);
+    CHECK((ans == 0.-1i || ans == 0.+1i));
+    ans = solve((y ^ 2) + 2 + y/2 - y/2 == -14);
+    CHECK((ans == 0.-4i || ans == 0.+4i));
+    ans = solve((y ^ 2) == -4);
+    CHECK((ans == 0.-2i || ans == 0.+2i));
+    ans = solve((y ^ 2) +3 == -22);
+    CHECK((ans == 0.-5i || ans == 0.+5i));
+    ans = solve((y ^ 2) == -30 -2 -4);
+    CHECK((ans == 0.-6i || ans == 0.+6i));
+    //************
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) == -1i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) +4i == 0), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) +3-2i == -1i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) == -4i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) +y == -1i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) +10*y +1i == -1i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) == -10i), "Math error! cant perform sqrt to imaginary variable");
+    CHECK_THROWS_MESSAGE(solve((y ^ 2) == -0.01i), "Math error! cant perform sqrt to imaginary variable");
 }
