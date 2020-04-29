@@ -133,7 +133,7 @@ double solve(RealVariable &x)
         double b = x.coef_1;
         double c = x.coef_0;
         // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
-        int t = b * b - 4 * a * c;
+        double t = b * b - 4.0 * a * c;
         if (t < 0)
         {
             // cout << "a = " << coef_2 << ", b = " << coef_1 << ", c = " << coef_0 << endl;
