@@ -119,6 +119,10 @@ RealVariable &operator==(RealVariable &x, double num)
 {
     return x - num;
 }
+RealVariable &operator==(double num, RealVariable &x)
+{
+    return x - num;
+}
 
 double solve(RealVariable &x)
 {
@@ -267,6 +271,25 @@ ComplexVariable &operator-(ComplexVariable &x, ComplexVariable &y)
 {
     return x + ((-1) * y);
 }
+ComplexVariable &operator+(complex<double> comp, ComplexVariable &x)
+{
+    return x + comp;
+}
+ComplexVariable &operator-(complex<double> comp, ComplexVariable &x)
+{
+    return x - comp;
+}
+ComplexVariable &operator-(ComplexVariable &x, complex<double> comp)
+{
+    return x + (-1.0)*comp;
+}
+ComplexVariable &operator-(double num, ComplexVariable &x){
+    return x - num;
+}
+ComplexVariable &operator==(double num, ComplexVariable &x)
+{
+    return x - num;
+}
 
 ComplexVariable &operator==(ComplexVariable &x, ComplexVariable &y)
 {
@@ -275,6 +298,14 @@ ComplexVariable &operator==(ComplexVariable &x, ComplexVariable &y)
 ComplexVariable &operator==(ComplexVariable &x, double num)
 {
     return x - num;
+}
+ComplexVariable &operator==(ComplexVariable &x, complex<double> comp)
+{
+    return x - comp;
+}
+ComplexVariable &operator==(complex<double> comp, ComplexVariable &x)
+{
+    return x - comp;
 }
 
 complex<double> solve(ComplexVariable &x)
@@ -313,7 +344,7 @@ complex<double> solve(ComplexVariable &x)
 
 } // namespace solver
 
-ostream &operator<<(ostream& os, complex<double> comp)
+ostream &operator<<(ostream &os, complex<double> comp)
 {
     if (comp.imag() >= 0)
     {

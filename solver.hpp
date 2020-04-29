@@ -45,6 +45,7 @@ public:
     friend RealVariable &operator-(RealVariable &x, RealVariable &y);
     friend RealVariable &operator==(RealVariable &x, RealVariable &y);
     friend RealVariable &operator==(RealVariable &x, double num);
+    friend RealVariable &operator==(double num, RealVariable &x);
 };
 
 // ************************* complex *************************
@@ -70,12 +71,19 @@ public:
     friend ComplexVariable &operator+(ComplexVariable &x, double num);
     friend ComplexVariable &operator+(double num, ComplexVariable &x);
     friend ComplexVariable &operator-(ComplexVariable &x, double num);
+    friend ComplexVariable &operator-(double num, ComplexVariable &x);
     friend ComplexVariable &operator+(ComplexVariable &x, ComplexVariable &y);
     friend ComplexVariable &operator+(ComplexVariable &x, complex<double> y);
     friend ComplexVariable &operator-(ComplexVariable &x, ComplexVariable &y);
-    friend ComplexVariable &operator==(ComplexVariable &x, ComplexVariable &y);
     friend ComplexVariable &operator==(ComplexVariable &x, double num);
-    
+    friend ComplexVariable &operator==(double num, ComplexVariable &x);
+    friend ComplexVariable &operator==(ComplexVariable &x, ComplexVariable &y);
+    friend ComplexVariable &operator==(ComplexVariable &x, complex<double> comp);
+    friend ComplexVariable &operator==(complex<double> comp, ComplexVariable &x);
+    friend ComplexVariable &operator+(ComplexVariable &x, complex<double> comp);
+    friend ComplexVariable &operator+(complex<double> comp, ComplexVariable &x);
+    friend ComplexVariable &operator-(complex<double> comp, ComplexVariable &x);
+    friend ComplexVariable &operator-(ComplexVariable &x, complex<double> comp);
 };
 
 double solve(RealVariable &expr);
@@ -83,6 +91,6 @@ complex<double> solve(ComplexVariable &expr);
 
 } // namespace solver
 
-ostream &operator<<(ostream& os, complex<double> comp);
+ostream &operator<<(ostream &os, complex<double> comp);
 
 #endif /* SOLVER_HPP_ */
